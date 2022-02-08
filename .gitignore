@@ -1,0 +1,7 @@
+**/*.o
+vgcore*
+.vscode*
+libmy_malloc.so
+
+test.c
+test

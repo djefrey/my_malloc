@@ -5,6 +5,7 @@
 ** best_fit
 */
 
+#include <stdio.h>
 #include <unistd.h>
 #include "my_malloc.h"
 

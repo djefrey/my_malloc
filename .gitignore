@@ -2,6 +2,7 @@
 vgcore*
 .vscode*
 libmy_malloc.so
+a.out
 
 test.c
 test

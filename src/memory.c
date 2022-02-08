@@ -23,5 +23,6 @@ void write_new_block_data(block_t *block, size_t size)
 {
     block->size = size;
     block->next = NULL;
+    block->ptr = ((void*) block) + BLOCK_SIZE;
     block->free = 0;
 }

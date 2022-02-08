@@ -9,13 +9,14 @@
 
 #include <stddef.h>
 
-#define ALIGN4(addr) ((((addr - 1) << 2) >> 2) + 4)
+#define ALIGN4(addr) (((((addr)-1)>>2)<<2)+4)
 #define BLOCK_SIZE (sizeof(block_t))
 #define MIN_ALLOC 16
 
 typedef struct block_s {
     size_t size;
     void *next;
+    void *ptr;
     int free;
 } block_t;
 

@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include "my_malloc.h"
 
+#include <stdio.h>
+
 void *malloc(size_t size)
 {
     static void *base = NULL;
@@ -16,8 +18,8 @@ void *malloc(size_t size)
     block_t *block;
     block_t *new;
 
-    write(1, "Malloc\n", 7);
-
+    if (size == 0)
+        return NULL;
     if (aligned_size < MIN_ALLOC)
         aligned_size = MIN_ALLOC;
     if (base) {
@@ -29,11 +31,23 @@ void *malloc(size_t size)
         if (!new)
             return (NULL);
         last = new;
-        return (new + BLOCK_SIZE);
+        return ((void*) new) + BLOCK_SIZE;
     } else {
         base = sbrk(0);
         last = base;
-        return (allocate_and_setup_block(base, aligned_size) + BLOCK_SIZE);
+        block = allocate_and_setup_block(base, aligned_size);
+        return ((void*) block) + BLOCK_SIZE;
     }
+    return NULL;
 }
 
+void free(void *ptr)
+{
+    block_t *block;
+
+    if (!ptr)
+        return;
+    block = ptr - BLOCK_SIZE;
+    if (block->ptr == ptr)
+        block->free = 1;
+}

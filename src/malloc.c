@@ -15,13 +15,15 @@
 void *malloc(size_t size)
 {
     static void *base = NULL;
-    static block_t *last = NULL;
     size_t aligned_size = ALIGN4(size);
     block_t *block;
     block_t *new;
 
-    #if DEBUG
-        debug_print_str("\nMalloc:\nSize:");
+    #if INFO
+        debug_print_str("\nMalloc");
+    #endif
+    #if LOG
+        debug_print_str("Size:");
         debug_print_size(size);
         debug_print_str("Aligned size:");
         debug_print_size(aligned_size);
@@ -32,20 +34,21 @@ void *malloc(size_t size)
     if (aligned_size < MIN_ALLOC)
         aligned_size = MIN_ALLOC;
     if (base) {
-        #if DEBUG
-            debug_print_str("Malloc: Base already set");
+        #if LOG
+            debug_print_str("Malloc: Base already set\nLast is:");
+            block_t *last = get_last_block(base);
+            debug_print_ptr(last);
+            debug_print_total_heap(base, last);
         #endif
-        new = search_append_split(base, aligned_size, last);
+        new = search_append_split(base, aligned_size);
         if (!new)
             return NULL;
-        last = new;
         return ((void*) new) + BLOCK_SIZE;
     } else {
-        #if DEBUG
+        #if INFO
             debug_print_str("First call to malloc\n");
         #endif
         base = sbrk(0);
-        last = base;
         block = allocate_and_setup_block(base, aligned_size);
         return ((void*) block) + BLOCK_SIZE;
     }
@@ -58,14 +61,14 @@ void free(void *ptr)
 
     if (!ptr)
         return;
-    #if DEBUG
+    #if INFO
         debug_print_str("Free");
     #endif
     block = ptr - BLOCK_SIZE;
     if (block->ptr == ptr)
         block->free = 1;
     else {
-        #if DEBUG
+        #if INFO
             debug_print_str("Invalid free !");
         #endif
     }
@@ -76,7 +79,7 @@ void *calloc(size_t nmemb, size_t size)
     void *ptr = NULL;
     size_t total = 0;
 
-    #if DEBUG
+    #if INFO
         debug_print_str("\nCalloc");
     #endif
     if (nmemb == 0 || size == 0)
@@ -94,7 +97,7 @@ void *realloc(void *ptr, size_t size)
     block_t *block = ptr - BLOCK_SIZE;
     void *new = NULL;
 
-    #if DEBUG
+    #if INFO
         debug_print_str("\nRealloc");
     #endif
     if (!ptr)
@@ -120,7 +123,7 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size)
 {
     size_t total = 0;
 
-    #if DEBUG
+    #if INFO
         debug_print_str("\nReallocarray");
     #endif
     if (nmemb == 0 || size == 0)

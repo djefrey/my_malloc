@@ -9,15 +9,17 @@
 #include "my_malloc.h"
 #include "debug.h"
 
-block_t *search_append_split(void *base, size_t size, block_t *last)
+block_t *search_append_split(void *base, size_t size)
 {
     block_t *block = find_best_block(base, size);
+    block_t *last = NULL;
     block_t *result = NULL;
 
     if (!block) {
         #if DEBUG
             debug_print_str("Append new block");
         #endif
+        last = get_last_block(base);
         result = append_new_block(last, size);
     } else {
         #if DEBUG
@@ -41,6 +43,8 @@ void *extend_heap(size_t req_size)
     for (; incr < req_size; incr += min_size);
     new_brk = sbrk(incr);
     #if DEBUG
+        debug_print_str("Incease heap of:");
+        debug_print_size(incr);
         if (new_brk == (void*) -1)
             debug_print_str("Failed to increase heap !");
     #endif

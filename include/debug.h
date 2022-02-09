@@ -9,6 +9,13 @@
 
 #include <stddef.h>
 
+#define INFO (DEBUG <= 1)
+#define LOG (DEBUG <= 5)
+#define TOO_MUCH_LOG 0
+
+typedef struct block_s block_t;
+
 void debug_print_ptr(void *ptr);
 void debug_print_size(size_t size);
 void debug_print_str(const char *str);
+void debug_print_total_heap(void *base, block_t *last);

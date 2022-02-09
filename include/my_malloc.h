@@ -22,7 +22,7 @@ typedef struct block_s {
 
 void *malloc(size_t size);
 
-block_t *search_append_split(void *base, size_t size, block_t *last);
+block_t *search_append_split(void *base, size_t size);
 void *extend_heap(size_t req_size);
 void write_new_block_data(block_t *block, size_t size);
 
@@ -32,3 +32,4 @@ block_t *split_existing_block(block_t *block, size_t size);
 block_t *merge_blocks(block_t *block);
 
 block_t *find_best_block(block_t *base, size_t size);
+block_t *get_last_block(block_t *start);

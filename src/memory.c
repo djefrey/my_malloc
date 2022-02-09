@@ -16,13 +16,13 @@ block_t *search_append_split(void *base, size_t size)
     block_t *result = NULL;
 
     if (!block) {
-        #if DEBUG
+        #if INFO
             debug_print_str("Append new block");
         #endif
         last = get_last_block(base);
         result = append_new_block(last, size);
     } else {
-        #if DEBUG
+        #if INFO
             debug_print_str("Split existing block");
         #endif
         result = split_existing_block(block, size);
@@ -36,13 +36,13 @@ void *extend_heap(size_t req_size)
     size_t incr = 0;
     void *new_brk = (void*) -1;
 
-    #if DEBUG
+    #if INFO
         debug_print_str("Increase heap:");
         debug_print_size(req_size);
     #endif
     for (; incr < req_size; incr += min_size);
     new_brk = sbrk(incr);
-    #if DEBUG
+    #if INFO
         debug_print_str("Incease heap of:");
         debug_print_size(incr);
         if (new_brk == (void*) -1)
@@ -53,14 +53,14 @@ void *extend_heap(size_t req_size)
 
 void write_new_block_data(block_t *block, size_t size)
 {
-    #if DEBUG
+    #if INFO
         debug_print_str("Writring new block data");
     #endif
     block->size = size;
     block->next = NULL;
     block->ptr = ((void*) block) + BLOCK_SIZE;
     block->free = 0;
-    #if DEBUG
+    #if INFO
         debug_print_str("Succeed to write new block data");
     #endif
 }

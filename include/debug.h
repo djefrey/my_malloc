@@ -9,11 +9,9 @@
 
 #include <stddef.h>
 
-#define INFO (DEBUG)
+#define INFO 0
 #define LOG 0
 #define TOO_MUCH_LOG 0
-
-#define DEBUG 1
 
 typedef struct block_s block_t;
 

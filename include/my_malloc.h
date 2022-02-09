@@ -22,6 +22,7 @@ typedef struct block_s {
 
 void *malloc(size_t size);
 
+block_t *search_append_split(void *base, size_t size, block_t *last);
 void *extend_heap(size_t req_size);
 void write_new_block_data(block_t *block, size_t size);
 

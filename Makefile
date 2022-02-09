@@ -10,11 +10,14 @@ SRC					=	src/malloc.c		\
 						src/block.c			\
 						src/best_fit.c
 
+DEBUG_SRC			=	debug/debug.c
+
 INC_DIR				=	./include
 
 CFLAGS				+=	-Wall -Wextra -I$(INC_DIR) -fpic
 
 OBJ					=	$(SRC:.c=.o)
+DEBUG_OBJ			=	$(DEBUG_SRC:.c=.o)
 
 NAME				=	libmy_malloc.so
 
@@ -26,8 +29,11 @@ $(NAME): $(OBJ)
 error: CFLAGS += -Werror
 error: re
 
-debug: CFLAGS += -g
-debug: re
+debug: clean
+debug: CFLAGS += -g -D DEBUG
+debug: $(DEBUG_OBJ)
+debug: OBJ += $(DEBUG_OBJ)
+debug: all
 
 clean:
 	rm -f $(OBJ)

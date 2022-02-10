@@ -104,6 +104,10 @@ void *realloc(void *ptr, size_t size)
         return (malloc(size));
     else if (block->ptr != ptr)
         return (NULL);
+    if (size == 0) {
+        block->free = 1;
+        return NULL;
+    }
     if (size < block->size)
         return (((void*) split_existing_block(block, size)) + BLOCK_SIZE);
     else if (size > block->size) {
@@ -126,8 +130,11 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size)
     #if INFO
         debug_print_str("\nReallocarray");
     #endif
-    if (nmemb == 0 || size == 0)
+    if (nmemb == 0 || size == 0) {
+        if (ptr)
+            free(ptr);
         return NULL;
+    }
     total = nmemb * size;
     if (total / nmemb != size)
         return NULL;

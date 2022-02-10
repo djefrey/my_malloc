@@ -112,7 +112,7 @@ void *realloc(void *ptr, size_t size)
     else if (size > block->size) {
         merge_blocks(block);
         if (size <= block->size)
-            return (((void*) block) + BLOCK_SIZE);
+            return (((void*) split_existing_block(block, size)) + BLOCK_SIZE);
         if (!(new = malloc(size)))
             return NULL;
         memcpy(new, ptr, block->size);

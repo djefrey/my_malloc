@@ -7,10 +7,9 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 #include "my_malloc.h"
 #include "debug.h"
-
-#include <stdio.h>
 
 void *malloc(size_t size)
 {
@@ -136,7 +135,9 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size)
         return NULL;
     }
     total = nmemb * size;
-    if (total / nmemb != size)
+    if (total / nmemb != size) {
+        errno = ENOMEM;
         return NULL;
+    }
     return realloc(ptr, total);
 }

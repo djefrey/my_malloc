@@ -18,35 +18,16 @@ void *malloc(size_t size)
     block_t *block;
     block_t *new;
 
-    #if INFO
-        debug_print_str("\nMalloc");
-    #endif
-    #if LOG
-        debug_print_str("Size:");
-        debug_print_size(size);
-        debug_print_str("Aligned size:");
-        debug_print_size(aligned_size);
-        debug_print_str("\n");
-    #endif
     if (size == 0)
         return NULL;
     if (aligned_size < MIN_ALLOC)
         aligned_size = MIN_ALLOC;
     if (base) {
-        #if LOG
-            debug_print_str("Malloc: Base already set\nLast is:");
-            block_t *last = get_last_block(base);
-            debug_print_ptr(last);
-            debug_print_total_heap(base, last);
-        #endif
         new = search_append_split(base, aligned_size);
         if (!new)
             return NULL;
         return ((void*) new) + BLOCK_SIZE;
     } else {
-        #if INFO
-            debug_print_str("First call to malloc\n");
-        #endif
         base = sbrk(0);
         block = allocate_and_setup_block(base, aligned_size);
         return ((void*) block) + BLOCK_SIZE;
@@ -60,17 +41,9 @@ void free(void *ptr)
 
     if (!ptr)
         return;
-    #if INFO
-        debug_print_str("Free");
-    #endif
     block = ptr - BLOCK_SIZE;
     if (block->ptr == ptr)
         block->free = 1;
-    else {
-        #if INFO
-            debug_print_str("Invalid free !");
-        #endif
-    }
 }
 
 void *calloc(size_t nmemb, size_t size)
@@ -78,9 +51,6 @@ void *calloc(size_t nmemb, size_t size)
     void *ptr = NULL;
     size_t total = 0;
 
-    #if INFO
-        debug_print_str("\nCalloc");
-    #endif
     if (nmemb == 0 || size == 0)
         return NULL;
     total = nmemb * size;
@@ -96,9 +66,6 @@ void *realloc(void *ptr, size_t size)
     block_t *block = ptr - BLOCK_SIZE;
     void *new = NULL;
 
-    #if INFO
-        debug_print_str("\nRealloc");
-    #endif
     if (!ptr)
         return (malloc(size));
     else if (block->ptr != ptr)
@@ -126,9 +93,6 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size)
 {
     size_t total = 0;
 
-    #if INFO
-        debug_print_str("\nReallocarray");
-    #endif
     if (nmemb == 0 || size == 0) {
         if (ptr)
             free(ptr);

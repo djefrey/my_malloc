@@ -29,20 +29,6 @@ $(NAME): $(OBJ)
 error: CFLAGS += -Werror
 error: re
 
-debug: clean
-debug: $(DEBUG_OBJ)
-debug: OBJ += $(DEBUG_OBJ)
-debug: all
-
-info: CFLAGS += -g -D DEBUG=1
-info: debug
-
-log: CFLAGS += -g -D DEBUG=5
-log: debug
-
-to_much_debug: CFLAGS += -g -D DEBUG=10
-to_much_debug: debug
-
 clean:
 	rm -f $(OBJ)
 

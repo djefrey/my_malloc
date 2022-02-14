@@ -21,6 +21,10 @@ typedef struct block_s {
 } block_t;
 
 void *malloc(size_t size);
+void free(void *ptr);
+void *calloc(size_t nmemb, size_t size);
+void *realloc(void *ptr, size_t size);
+void *reallocarray(void *ptr, size_t nmemb, size_t size);
 
 block_t *search_append_split(void *base, size_t size);
 void *extend_heap(size_t req_size);

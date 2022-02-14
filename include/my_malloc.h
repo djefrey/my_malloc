@@ -9,9 +9,8 @@
 
 #include <stddef.h>
 
-#define ALIGN4(addr) (((((addr)-1)>>2)<<2)+4)
 #define BLOCK_SIZE (sizeof(block_t))
-#define MIN_ALLOC 16
+#define MIN_ALLOC ((size_t) 16)
 
 typedef struct block_s {
     size_t size;
@@ -37,3 +36,6 @@ block_t *merge_blocks(block_t *block);
 
 block_t *find_best_block(block_t *base, size_t size);
 block_t *get_last_block(block_t *start);
+
+size_t min(size_t a, size_t min);
+size_t align4(size_t size);

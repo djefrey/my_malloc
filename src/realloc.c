@@ -13,17 +13,19 @@
 
 static int realloc_basic_checks(void **ptr, block_t *block, size_t size)
 {
-    if (!(*ptr)) {
+    if (*ptr == NULL) {
         *ptr = malloc(size);
         return 1;
-    } else if (block->ptr != *ptr) {
-        *ptr = NULL;
-        return 1;
-    }
-    if (size == 0) {
-        block->free = 1;
-        *ptr = NULL;
-        return 1;
+    } else {
+        if (block->ptr != *ptr) {
+            *ptr = NULL;
+            return 1;
+        }
+        if (size == 0) {
+            block->free = 1;
+            *ptr = NULL;
+            return 1;
+        }
     }
     return 0;
 }
@@ -55,10 +57,12 @@ void *realloc(void *ptr, size_t size)
 
     if (realloc_basic_checks(&ptr, block, size))
         return ptr;
-    if (size < block->size)
-        return (((void*) split_existing_block(block, size)) + BLOCK_SIZE);
-    else if (size > block->size)
-        return realloc_increase_alloc(ptr, block, size);
+    else {
+        if (size < block->size)
+            return (((void*) split_existing_block(block, size)) + BLOCK_SIZE);
+        else if (size > block->size)
+            return realloc_increase_alloc(ptr, block, size);
+    }
     return ptr;
 }
 

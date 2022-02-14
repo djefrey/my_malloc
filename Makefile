@@ -9,7 +9,8 @@ SRC					=	src/malloc.c		\
 						src/realloc.c		\
 						src/memory.c		\
 						src/block.c			\
-						src/best_fit.c
+						src/best_fit.c		\
+						src/utils.c
 
 INC_DIR				=	./include
 

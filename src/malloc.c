@@ -8,20 +8,18 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/param.h>
 #include "my_malloc.h"
-#include "debug.h"
 
 void *malloc(size_t size)
 {
     static void *base = NULL;
-    size_t aligned_size = ALIGN4(size);
+    size_t aligned_size = min(align4(size), MIN_ALLOC);
     block_t *block;
     block_t *new;
 
     if (size == 0)
         return NULL;
-    if (aligned_size < MIN_ALLOC)
-        aligned_size = MIN_ALLOC;
     if (base) {
         new = search_append_split(base, aligned_size);
         if (!new)

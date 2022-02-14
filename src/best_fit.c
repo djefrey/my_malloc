@@ -12,12 +12,12 @@
 
 static void check_if_is_better(block_t *block, block_t **best, size_t size)
 {
-    if (block->size < size)
-        return;
-    if (*best == NULL)
-        *best = block;
-    else if (block->size < (*best)->size)
-        *best = block;
+    if (block->size >= size) {
+        if (*best == NULL)
+            *best = block;
+        else if (block->size < (*best)->size)
+            *best = block;
+    }
 }
 
 block_t *find_best_block(block_t *base, size_t size)

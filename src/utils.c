@@ -14,5 +14,5 @@ size_t min(size_t a, size_t min)
 
 size_t align4(size_t size)
 {
-    return ((size / 4) * 4) + 4;
+    return ((size - 1 >> 2) << 2) + 4;
 }

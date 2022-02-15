@@ -36,7 +36,7 @@ static void *realloc_increase_alloc(void *ptr, block_t *block, size_t size)
     block_t *new_block = NULL;
     void *new_ptr = NULL;
 
-    merge_blocks(block);
+    //merge_blocks(block);
     if (size <= block->size) {
         new_block = split_existing_block(block, size);
         new_ptr = ((void*) new_block) + BLOCK_SIZE;

@@ -12,7 +12,6 @@
 #include "my_malloc.h"
 
 void *BASE = NULL;
-pthread_mutex_t MUTEX_LOCK = PTHREAD_MUTEX_INITIALIZER;
 
 void *malloc(size_t size)
 {
@@ -20,19 +19,17 @@ void *malloc(size_t size)
     block_t *block;
     block_t *new;
 
-    pthread_mutex_lock(&MUTEX_LOCK);
     if (BASE) {
         new = search_append_split(BASE, aligned_size);
-        pthread_mutex_unlock(&MUTEX_LOCK);
         if (!new)
             return NULL;
         return ((void*) new) + BLOCK_SIZE;
     } else {
         BASE = sbrk(0);
         block = allocate_and_setup_block(BASE, aligned_size);
-        pthread_mutex_unlock(&MUTEX_LOCK);
         return ((void*) block) + BLOCK_SIZE;
     }
+    return NULL;
 }
 
 void free(void *ptr)
@@ -42,10 +39,8 @@ void free(void *ptr)
     if (!ptr)
         return;
     block = ptr - BLOCK_SIZE;
-    pthread_mutex_lock(&MUTEX_LOCK);
     if (block->ptr == ptr)
         block->free = 1;
-    pthread_mutex_unlock(&MUTEX_LOCK);
 }
 
 void *calloc(size_t nmemb, size_t size)

@@ -22,7 +22,7 @@ static int realloc_basic_checks(void **ptr, block_t *block, size_t size)
             return 1;
         }
         if (size == 0) {
-            free(*ptr);
+            block->free = 1;
             *ptr = NULL;
             return 1;
         }
@@ -37,14 +37,12 @@ static void *realloc_increase_alloc(void *ptr, block_t *block, size_t size)
     void *new_ptr = NULL;
 
     if (size <= block->size) {
-        pthread_mutex_lock(&MUTEX_LOCK);
         new_block = split_existing_block(block, size);
         new_ptr = ((void*) new_block) + BLOCK_SIZE;
-        pthread_mutex_unlock(&MUTEX_LOCK);
     } else {
         if (!(new_ptr = malloc(size)))
             return NULL;
-        free(ptr);
+        block->free = 1;
         memcpy(new_ptr, ptr, ori_size);
     }
     return new_ptr;

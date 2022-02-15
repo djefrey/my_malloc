@@ -11,23 +11,24 @@
 #include <sys/param.h>
 #include "my_malloc.h"
 
+void *BASE = NULL;
+
 void *malloc(size_t size)
 {
-    static void *base = NULL;
     size_t aligned_size = min(align4(size), MIN_ALLOC);
     block_t *block;
     block_t *new;
 
     if (size == 0)
         return NULL;
-    if (base) {
-        new = search_append_split(base, aligned_size);
+    if (BASE) {
+        new = search_append_split(BASE, aligned_size);
         if (!new)
             return NULL;
         return ((void*) new) + BLOCK_SIZE;
     } else {
-        base = sbrk(0);
-        block = allocate_and_setup_block(base, aligned_size);
+        BASE = sbrk(0);
+        block = allocate_and_setup_block(BASE, aligned_size);
         return ((void*) block) + BLOCK_SIZE;
     }
     return NULL;

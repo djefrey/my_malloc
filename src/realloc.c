@@ -53,6 +53,10 @@ void *realloc(void *ptr, size_t size)
 {
     block_t *block = ptr - BLOCK_SIZE;
 
+    if (!BASE) {
+        BASE = sbrk(0);
+        allocate_and_setup_block(BASE, 0);
+    }
     if (realloc_basic_checks(&ptr, block, size))
         return ptr;
     else {

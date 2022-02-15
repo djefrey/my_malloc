@@ -39,3 +39,5 @@ block_t *get_last_block(block_t *start);
 
 size_t min(size_t a, size_t min);
 size_t align4(size_t size);
+
+extern void *BASE;

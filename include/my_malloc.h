@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <pthread.h>
 
 #define BLOCK_SIZE (sizeof(block_t))
 #define MIN_ALLOC ((size_t) 16)
@@ -41,3 +42,4 @@ size_t min(size_t a, size_t min);
 size_t align4(size_t size);
 
 extern void *BASE;
+extern pthread_mutex_t MUTEX_LOCK;

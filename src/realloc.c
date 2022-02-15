@@ -51,12 +51,10 @@ static void *realloc_increase_alloc(void *ptr, block_t *block, size_t size)
 void *realloc(void *ptr, size_t size)
 {
     block_t *block = ptr - BLOCK_SIZE;
-    size_t aligned_size = align4(size);
+    size_t aligned_size = min(align4(size), MIN_ALLOC);
 
-    if (!BASE) {
-        BASE = sbrk(0);
-        allocate_and_setup_block(BASE, 0);
-    }
+    if (!BASE)
+        return (malloc(size));
     if (realloc_basic_checks(&ptr, block, aligned_size))
         return ptr;
     else {

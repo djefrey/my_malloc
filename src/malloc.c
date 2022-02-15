@@ -19,8 +19,6 @@ void *malloc(size_t size)
     block_t *block;
     block_t *new;
 
-    if (size == 0)
-        return NULL;
     if (BASE) {
         new = search_append_split(BASE, aligned_size);
         if (!new)

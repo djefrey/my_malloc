@@ -52,18 +52,19 @@ static void *realloc_increase_alloc(void *ptr, block_t *block, size_t size)
 void *realloc(void *ptr, size_t size)
 {
     block_t *block = ptr - BLOCK_SIZE;
+    size_t aligned_size = align4(size);
 
     if (!BASE) {
         BASE = sbrk(0);
         allocate_and_setup_block(BASE, 0);
     }
-    if (realloc_basic_checks(&ptr, block, size))
+    if (realloc_basic_checks(&ptr, block, aligned_size))
         return ptr;
     else {
-        if (size < block->size)
-            return (((void*) split_existing_block(block, size)) + BLOCK_SIZE);
-        else if (size > block->size)
-            return realloc_increase_alloc(ptr, block, size);
+        if (aligned_size < block->size)
+            return (((void*) split_existing_block(block, aligned_size)) + BLOCK_SIZE);
+        else if (aligned_size > block->size)
+            return realloc_increase_alloc(ptr, block, aligned_size);
     }
     return ptr;
 }

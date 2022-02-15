@@ -41,11 +41,9 @@ static void *realloc_increase_alloc(void *ptr, block_t *block, size_t size)
         new_block = split_existing_block(block, size);
         new_ptr = ((void*) new_block) + BLOCK_SIZE;
     } else {
-        block->free = 1;
-        if (!(new_ptr = malloc(size))) {
-            block->free = 0;
+        if (!(new_ptr = malloc(size)))
             return NULL;
-        }
+        block->free = 1;
         memcpy(new_ptr, ptr, ori_size);
     }
     return new_ptr;

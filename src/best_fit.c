@@ -23,21 +23,11 @@ static void check_if_is_better(block_t *block, block_t **best, size_t size)
 block_t *find_best_block(block_t *base, size_t size)
 {
     block_t *block = base;
-    block_t *prev = NULL;
     block_t *best = NULL;
-    int prev_is_free = 0;
 
-    for (; block; prev = block, block = block->next) {
-        if (!block->free) {
-            prev_is_free = 0;
-        } else {
-            if (prev_is_free) {
-                merge_blocks(prev);
-                block = prev;
-            }
+    for (; block; block = block->next) {
+        if (block->free)
             check_if_is_better(block, &best, size);
-            prev_is_free = 1;
-        }
     }
     return (best);
 }

@@ -59,7 +59,8 @@ void *realloc(void *ptr, size_t size)
         return ptr;
     else {
         if (aligned_size < block->size)
-            return (((void*) split_existing_block(block, aligned_size)) + BLOCK_SIZE);
+            return (((void*)
+            split_existing_block(block, aligned_size)) + BLOCK_SIZE);
         else if (aligned_size > block->size)
             return realloc_increase_alloc(ptr, block, aligned_size);
     }
